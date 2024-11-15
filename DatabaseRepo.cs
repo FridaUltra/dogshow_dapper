@@ -43,8 +43,15 @@ public class DatabaseRepo
     return averageScore;
   }
 
+  public Competition GetCompetitionById(int id)
+  {
+    using IDbConnection connection = Connect();
+    string query = "SELECT * FROM Competition WHERE Id = @Id";
+    var parameter = new {Id = id};
 
- // sätta genomsnittsbetyg för en hund. Eller hämta visa.
+    return connection.QuerySingle<Competition>(query, parameter);
+  }
+  
  // visa highscore för en viss tillställning
  // visa highscore för alla tillställningar någonsin
 }
