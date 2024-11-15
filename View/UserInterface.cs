@@ -30,4 +30,21 @@ public class UserInterface(DatabaseRepo db)
 
     Console.WriteLine($"Genomsnittsbetyget för {dog.Name} är {averageScore}");
   }
+
+  public Competition? ChooseCompetition()
+  {
+    //TODO: Lägg till felhantering
+    
+    Console.Write("Ange id för den tävling som du vill se highscorelistan för: ");
+		if(int.TryParse(Console.ReadLine(), out int id))
+		{
+			var competition = db.GetCompetitionById(id);
+
+			Console.WriteLine($"{competition.Name}");
+
+      return competition;
+
+		}
+    return null;
+  }
 }
