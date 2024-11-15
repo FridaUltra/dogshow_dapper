@@ -9,9 +9,7 @@ internal class Program
         var ui = new UserInterface(db);
 
         var dog = ui.PickDog();
+		ui.DisplayDogAverageScore(dog!);
         
-        var averageScore = db.GetDogAverageScore(dog!);
-
-        Console.WriteLine($"{dog.Name} genomsnittsbetyg är {averageScore}");
     }
 }

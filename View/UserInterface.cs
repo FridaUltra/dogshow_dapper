@@ -10,7 +10,7 @@ public class UserInterface(DatabaseRepo db)
   public Dog? PickDog()
   {
     //TODO: Lägg till felhantering med loop så att man måste välja en hund som finns.
-    
+
     Console.Write("Ange id för den hund du vill se: ");
 
     if(int.TryParse(Console.ReadLine(), out int id))
@@ -22,5 +22,12 @@ public class UserInterface(DatabaseRepo db)
     }
 
     return null;
+  }
+
+  public void DisplayDogAverageScore(Dog dog)
+  {
+    var averageScore = db.GetDogAverageScore(dog!);
+
+    Console.WriteLine($"Genomsnittsbetyget för {dog.Name} är {averageScore}");
   }
 }
