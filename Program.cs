@@ -13,5 +13,12 @@ internal class Program
 
 		var competition = ui.ChooseCompetition();
         
+		var highscoreList = db.GetHighscoreForCompetition(competition);
+
+		foreach (var item in highscoreList)
+		{
+			Console.WriteLine($"Hund: {item.Dog} \t Poäng: {item.Points}");
+		}
+
     }
 }

@@ -51,7 +51,27 @@ public class DatabaseRepo
 
     return connection.QuerySingle<Competition>(query, parameter);
   }
-  
+
+  public List<HighscoreEntry> GetHighscoreForCompetition(Competition competition)
+  {
+    using IDbConnection connection = Connect();
+    string query = @"
+            SELECT 
+                d.Name AS Dog, 
+                r.Points AS Points
+            FROM 
+                Result r
+            INNER JOIN 
+                Dog d ON r.DogId = d.Id
+            WHERE 
+                r.CompetitionId = @CompetitionId
+            ORDER BY 
+                r.Points DESC;";
+
+    var parameter = new {CompetitionId = competition.Id};
+    var highscoreList = connection.Query<HighscoreEntry>(query, parameter).AsList();
+    return highscoreList;
+  }
  // visa highscore för en viss tillställning
  // visa highscore för alla tillställningar någonsin
 }
