@@ -6,11 +6,12 @@ internal class Program
     {
         var db = new DatabaseRepo();
 
-        List<Dog> dogs = db.GetDogs();
-
-        foreach (var dog in dogs)
+        Console.Write("Ange id för den hund du vill se: ");
+        if(int.TryParse(Console.ReadLine(), out int id))
         {
-          Console.WriteLine(dog.Name);
+          var dog = db.GetDogById(id);
+
+          Console.WriteLine($"Hunden med id {id} heter {dog.Name}");
         }
     }
 }

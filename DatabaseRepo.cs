@@ -13,8 +13,7 @@ class DatabaseRepo
     return connection;
   }
 
-  // HÄmta alla hundar
-
+  // Hämta alla hundar
   public List<Dog> GetDogs()
   {
     using IDbConnection connection = Connect();
@@ -22,4 +21,18 @@ class DatabaseRepo
     var dogs = connection.Query<Dog>(query).AsList();
     return dogs;
   }
+
+  public Dog GetDogById(int id)
+  {
+    using IDbConnection connection = Connect();
+    string query = "SELECT * FROM Dog WHERE Id = @Id";
+    var parameter = new {Id = id};
+
+    return connection.QuerySingle<Dog>(query, parameter);
+  }
+
+
+ // sätta genomsnittsbetyg för en hund.
+ // visa highscore för en viss tillställning
+ // visa highscore för alla tillställningar någonsin
 }
