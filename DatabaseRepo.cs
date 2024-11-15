@@ -3,7 +3,7 @@ using System.Data.SqlClient;
 using Dapper;
 using Model;
 
-class DatabaseRepo
+public class DatabaseRepo
 {
 
   private IDbConnection Connect()
@@ -32,7 +32,7 @@ class DatabaseRepo
   }
 
 
- // sätta genomsnittsbetyg för en hund.
+ // sätta genomsnittsbetyg för en hund. Eller hämta visa.
  // visa highscore för en viss tillställning
  // visa highscore för alla tillställningar någonsin
 }
