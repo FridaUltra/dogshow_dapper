@@ -17,7 +17,7 @@ internal class Program
 
 		foreach (var item in highscoreList)
 		{
-			Console.WriteLine($"Hund: {item.Dog} \t Poäng: {item.Points}");
+			Console.WriteLine($"Hund: {item.Dog} \t Ras: {item.Breed} \t Poäng: {item.Points} \t Ägare: {item.Owner}");
 		}
 
     }

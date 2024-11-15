@@ -57,12 +57,18 @@ public class DatabaseRepo
     using IDbConnection connection = Connect();
     string query = @"
             SELECT 
-                d.Name AS Dog, 
-                r.Points AS Points
+                d.Name AS Dog,
+                b.Name AS Breed,
+                o.Name AS Owner,
+                r.Points AS Points 
             FROM 
                 Result r
             INNER JOIN 
                 Dog d ON r.DogId = d.Id
+            INNER JOIN
+                Breed b ON d.BreedId = b.Id
+            INNER JOIN
+                Owner o ON d.OwnerId = o.Id
             WHERE 
                 r.CompetitionId = @CompetitionId
             ORDER BY 
