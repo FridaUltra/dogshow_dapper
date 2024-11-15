@@ -8,7 +8,10 @@ internal class Program
         var db = new DatabaseRepo();
         var ui = new UserInterface(db);
 
-        ui.PickDog();
+        var dog = ui.PickDog();
         
+        var averageScore = db.GetDogAverageScore(dog!);
+
+        Console.WriteLine($"{dog.Name} genomsnittsbetyg är {averageScore}");
     }
 }

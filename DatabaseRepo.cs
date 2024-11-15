@@ -1,5 +1,6 @@
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using Dapper;
 using Model;
 
@@ -29,6 +30,17 @@ public class DatabaseRepo
     var parameter = new {Id = id};
 
     return connection.QuerySingle<Dog>(query, parameter);
+  }
+
+  // Highscore for a specific dog
+  public float? GetDogAverageScore(Dog dog)
+  {
+    using IDbConnection connection = Connect();
+    string query ="SELECT AVG(Points) FROM Result WHERE DogId = @DogId";
+    var parameter = new { DogId = dog.Id };
+
+    var averageScore = connection.QueryFirstOrDefault<float?>(query, parameter);
+    return averageScore;
   }
 
 
