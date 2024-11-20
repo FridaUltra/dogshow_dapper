@@ -43,6 +43,14 @@ public class DatabaseRepo
     return averageScore;
   }
 
+  public List<Competition> GetAllCompetitions()
+  {
+    using IDbConnection connection = Connect();
+    string query = "SELECT * FROM Competition";
+    var allCompetitions = connection.Query<Competition>(query).AsList();
+    return allCompetitions;
+  }
+
   public Competition GetCompetitionById(int id)
   {
     using IDbConnection connection = Connect();
