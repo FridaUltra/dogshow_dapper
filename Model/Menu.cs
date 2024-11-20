@@ -1,61 +1,17 @@
-using Model;
-
-namespace View;
-
-public class UserInterface(DatabaseRepo db)
+namespace Model;
+// försökte göra denna generisk, men kan inte lägga till namn då. Flyttade över till ui metod istället.
+public class CompetitionMenu(List<Competition> menuOptions)
 {
-  private readonly DatabaseRepo _db = db;
+    private List<Competition> _menuOptions = menuOptions;
 
-  
-  public Dog? PickDog()
-  {
-    //TODO: Lägg till felhantering med loop så att man måste välja en hund som finns.
-
-    Console.Write("Ange id för den hund du vill se: ");
-
-    if(int.TryParse(Console.ReadLine(), out int id))
+  // visa menyn
+    public int Display()
     {
-      var dog = _db.GetDogById(id);
-
-      Console.WriteLine($"Hunden med id {id} heter {dog.Name}");
-      return dog;
-    }
-
-    return null;
-  }
-
-  public void DisplayDogAverageScore(Dog dog)
-  {
-    var averageScore = _db.GetDogAverageScore(dog!);
-
-    Console.WriteLine($"Genomsnittsbetyget för {dog.Name} är {averageScore}");
-  }
-
-  public Competition? ChooseCompetitionByEnteringID()
-  {
-    //TODO: Lägg till felhantering
-
-    Console.Write("Ange id för den tävling som du vill se highscorelistan för: ");
-    if(int.TryParse(Console.ReadLine(), out int id))
-    {
-      var competition = _db.GetCompetitionById(id);
-
-      Console.WriteLine($"{competition.Name}");
-
-      return competition;
-
-    }
-    return null;
-  }
-
-  public int ChooseCompetition()
-  {
-    List<Competition> _menuOptions = db.GetAllCompetitions();
-    int selectedIndex = 0; // Startposition för pilen
+      int selectedIndex = 0; // Startposition för pilen
       while (true)
         {
 
-            // Console.Clear();
+            Console.Clear();
             Console.WriteLine("Use arrow keys to navigate and Enter to select:");
 
             // Rita menyn
@@ -92,6 +48,5 @@ public class UserInterface(DatabaseRepo db)
                 return _menuOptions[selectedIndex].Id;
             }
         }
-  }
-
+    }
 }
