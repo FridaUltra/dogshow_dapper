@@ -1,51 +1,49 @@
 namespace Model;
-// försökte göra denna generisk, men kan inte lägga till namn då. Flyttade över till ui metod istället.
-public class Menu<T>(List<T> menuOptions)
-{
-    private List<T> _menuOptions = menuOptions;
 
+public class Menu<T>()
+{
   // visa menyn
-    public T Display()
+    public T Display(List<T> menuOptions)
     {
       int selectedIndex = 0; // Startposition för pilen
       while (true)
         {
 
             Console.Clear();
-            Console.WriteLine("Use arrow keys to navigate and Enter to select:");
+            Console.WriteLine("Pila upp och ner. Välj tävling med enter:");
 
             // Rita menyn
-            for (int i = 0; i < _menuOptions.Count; i++)
+            for (int i = 0; i < menuOptions.Count; i++)
             {
                 if (i == selectedIndex)
                 {
-                    Console.WriteLine($"-> {_menuOptions[i]}"); // Markerat val
+                    Console.WriteLine($"-> {menuOptions[i]}"); // Markerat val
                 }
                 else
                 {
-                    Console.WriteLine($"   {_menuOptions[i]}"); // Ej markerat val
+                    Console.WriteLine($"   {menuOptions[i]}"); // Ej markerat val
                 }
             }
 
             // Hantera tangentbordets inmatning
             ConsoleKey key = Console.ReadKey(true).Key;
 
-            if (key == ConsoleKey.UpArrow) // Flytta upp
+            switch (key)
             {
-                selectedIndex--;
-                if (selectedIndex < 0) selectedIndex = _menuOptions.Count - 1; // Loop till slutet
-            }
-            else if (key == ConsoleKey.DownArrow) // Flytta ner
-            {
-                selectedIndex++;
-                if (selectedIndex >= _menuOptions.Count) selectedIndex = 0; // Loop till början
-            }
-            else if (key == ConsoleKey.Enter) // Bekräfta val
-            {
-                Console.Clear();
-                Console.WriteLine($"You selected: {_menuOptions[selectedIndex]}");
-               
-                return _menuOptions[selectedIndex];
+                case ConsoleKey.UpArrow: // Flytta upp
+                    selectedIndex--;
+                    if (selectedIndex < 0) selectedIndex = menuOptions.Count - 1; // Loop till slutet
+                    break;
+                case ConsoleKey.DownArrow: // Flytta ner
+                    selectedIndex++;
+                    if (selectedIndex >= menuOptions.Count) selectedIndex = 0; // Loop till början
+                    break;
+                case ConsoleKey.Enter: // Välj
+                    Console.Clear();
+                    Console.WriteLine($"You selected: {menuOptions[selectedIndex]}");
+                    return menuOptions[selectedIndex];
+                    
+                default: break;
             }
         }
     }

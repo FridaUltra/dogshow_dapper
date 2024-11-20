@@ -22,8 +22,8 @@ internal class Program
 
 
         List<Competition> menuOptions = db.GetAllCompetitions();
-       CompetitionMenu<Competition> competitionsMenu = new(menuOptions); 
-       var competition2 = competitionsMenu.Display();
+       Menu<Competition> competitionsMenu = new(); 
+       var competition2 = competitionsMenu.Display(menuOptions);
         Console.WriteLine(competition2.Id);
 
         //Hämtar alla tävlingar och visar en menu med pilar. Id på den valda returneras.
