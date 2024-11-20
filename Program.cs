@@ -21,18 +21,13 @@ internal class Program
 		}
 
 
-        //Hämta alla tävlingar
-        List<Competition> competitions = db.GetAllCompetitions();
-        // foreach (var item in competitions)
-        // {
-        //     Console.WriteLine(item.Name);           
-        // }
+        List<Competition> menuOptions = db.GetAllCompetitions();
+       CompetitionMenu<Competition> competitionsMenu = new(menuOptions); 
+       var competition2 = competitionsMenu.Display();
+        Console.WriteLine(competition2.Id);
 
-
-    //    CompetitionMenu competitionsMenu = new(competitions); 
-    //    int competiotionsId = competitionsMenu.Display();
-
-        int competitionId = ui.ChooseCompetition();
-        Console.WriteLine(competitionId);
+        //Hämtar alla tävlingar och visar en menu med pilar. Id på den valda returneras.
+        // int competitionId = ui.ChooseCompetition();
+        // Console.WriteLine(competitionId);
     }
 }

@@ -1,11 +1,11 @@
 namespace Model;
 // försökte göra denna generisk, men kan inte lägga till namn då. Flyttade över till ui metod istället.
-public class CompetitionMenu(List<Competition> menuOptions)
+public class Menu<T>(List<T> menuOptions)
 {
-    private List<Competition> _menuOptions = menuOptions;
+    private List<T> _menuOptions = menuOptions;
 
   // visa menyn
-    public int Display()
+    public T Display()
     {
       int selectedIndex = 0; // Startposition för pilen
       while (true)
@@ -19,11 +19,11 @@ public class CompetitionMenu(List<Competition> menuOptions)
             {
                 if (i == selectedIndex)
                 {
-                    Console.WriteLine($"-> {_menuOptions[i].Name}"); // Markerat val
+                    Console.WriteLine($"-> {_menuOptions[i]}"); // Markerat val
                 }
                 else
                 {
-                    Console.WriteLine($"   {_menuOptions[i].Name}"); // Ej markerat val
+                    Console.WriteLine($"   {_menuOptions[i]}"); // Ej markerat val
                 }
             }
 
@@ -43,9 +43,9 @@ public class CompetitionMenu(List<Competition> menuOptions)
             else if (key == ConsoleKey.Enter) // Bekräfta val
             {
                 Console.Clear();
-                Console.WriteLine($"You selected: Id:{_menuOptions[selectedIndex].Id}, {_menuOptions[selectedIndex].Name}");
-                // break;
-                return _menuOptions[selectedIndex].Id;
+                Console.WriteLine($"You selected: {_menuOptions[selectedIndex]}");
+               
+                return _menuOptions[selectedIndex];
             }
         }
     }
