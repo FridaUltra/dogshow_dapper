@@ -1,6 +1,5 @@
 using System.Data;
 using System.Data.SqlClient;
-using System.Globalization;
 using Dapper;
 using Model;
 
@@ -41,6 +40,21 @@ public class DatabaseRepo
 
     var averageScore = connection.QueryFirstOrDefault<float?>(query, parameter);
     return averageScore;
+  }
+  // Get all dogs for a specific competition
+  public List<string> GetDogsBreedForACompetition(Competition competition)
+  {
+     using IDbConnection connection = Connect();
+    string query = @"SELECT DISTINCT
+                      b.Name AS Ras
+                    FROM Result r
+                    INNER JOIN 
+                      Dog d ON r.DogId = d.Id
+                    INNER JOIN
+                      Breed b ON d.BreedId = b.Id
+                    WHERE r.CompetitionId = @CompetitionId";
+    var breeds = connection.Query<string>(query, new {CompetitionId = competition.Id }).AsList();
+    return breeds;
   }
 
   public List<Competition> GetAllCompetitions()
