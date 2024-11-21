@@ -3,15 +3,18 @@ namespace Model;
 public class Menu<T>()
 {
   // visa menyn
-    public T Display(List<T> menuOptions)
+    public T Display(List<T> menuOptions, string header)
     {
       int selectedIndex = 0; // Startposition för pilen
       while (true)
         {
 
             Console.Clear();
-            Console.WriteLine("Pila upp och ner. Välj tävling med enter:");
-
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.WriteLine(header + "\n");
+            Console.WriteLine("Pila upp och ner. Välj med enter:\n");
+            Console.ForegroundColor = ConsoleColor.White;
+            
             // Rita menyn
             for (int i = 0; i < menuOptions.Count; i++)
             {
@@ -40,7 +43,6 @@ public class Menu<T>()
                     break;
                 case ConsoleKey.Enter: // Välj
                     Console.Clear();
-                    Console.WriteLine($"You selected: {menuOptions[selectedIndex]}");
                     return menuOptions[selectedIndex];
                     
                 default: break;
