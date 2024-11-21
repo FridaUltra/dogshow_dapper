@@ -8,7 +8,7 @@ public class Competition
   public string Location { get; set; } = string.Empty;
 
   public override string ToString()
-    {
-        return $"{Name}";
-    }
+  {
+     return $"{Name}";
+  }
 }

@@ -6,4 +6,9 @@ public class Dog
   public string Name { get; set; } = string.Empty;
   public int OwnerId { get; set; }
   public int BreedId { get; set; }
+
+  public override string ToString()
+  {
+    return $"{Name}";
+  }
 }
