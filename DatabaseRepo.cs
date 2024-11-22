@@ -41,20 +41,43 @@ public class DatabaseRepo
     var averageScore = connection.QueryFirstOrDefault<float?>(query, parameter);
     return averageScore;
   }
-  // Get all dogs for a specific competition
-  public List<string> GetDogsBreedForACompetition(Competition competition)
+  // Get all breeds for a specific competition
+  public List<Breed> GetDogsBreedForACompetition(Competition competition)
   {
-     using IDbConnection connection = Connect();
+    using IDbConnection connection = Connect();
     string query = @"SELECT DISTINCT
-                      b.Name AS Ras
+                      b.Name,
+                      b.Id
                     FROM Result r
                     INNER JOIN 
                       Dog d ON r.DogId = d.Id
                     INNER JOIN
                       Breed b ON d.BreedId = b.Id
                     WHERE r.CompetitionId = @CompetitionId";
-    var breeds = connection.Query<string>(query, new {CompetitionId = competition.Id }).AsList();
+    var breeds = connection.Query<Breed>(query, new {CompetitionId = competition.Id }).AsList();
     return breeds;
+  }
+
+  // Get all dogs from a breed for a specific competition
+  public List<Dog> GetDogsWithSameBreedFromACompetition(Competition competition, Breed breed)
+  {
+    using IDbConnection connection = Connect();
+    string query = @"SELECT
+                      d.Name,
+                      d.Id,
+                      d.OwnerId,
+                      d.BreedId
+                    FROM Result r
+                    INNER JOIN 
+                      Dog d ON r.DogId = d.Id
+                    INNER JOIN
+                      Breed b ON d.BreedId = b.Id
+                    WHERE
+                      r.CompetitionId = @CompetitionId
+                      AND b.Id = @BreedId";
+                      
+    var dogs = connection.Query<Dog>(query, new {CompetitionId = competition.Id, BreedId = breed.Id }).AsList();
+    return dogs;
   }
 
   public List<Competition> GetAllCompetitions()
@@ -100,6 +123,38 @@ public class DatabaseRepo
     var highscoreList = connection.Query<HighscoreEntry>(query, parameter).AsList();
     return highscoreList;
   }
- // visa highscore för en viss tillställning
+
+  public List<HighscoreEntry> GetHighscoreForAllCompetitions()
+  {
+    using IDbConnection connection = Connect();
+    string query = @"SELECT 
+                    d.Name AS Dog, 
+                    b.Name AS Breed,
+                    o.Name As Owner,
+                    SUM(r.Points) AS Points
+                FROM 
+                    Result r
+                INNER JOIN 
+                    Dog d ON r.DogId = d.Id
+                INNER JOIN 
+                    Breed b ON d.BreedId = b.Id
+                INNER JOIN
+                    Owner o ON d.OwnerId = o.Id
+                GROUP BY 
+                    d.Id, d.Name, b.Name, o.Name
+                ORDER BY 
+                    Points DESC;";
+    var highscoreList = connection.Query<HighscoreEntry>(query).AsList();
+    return highscoreList;
+  }
+
+  public void AddResult(Result result)
+  {
+    using IDbConnection connection = Connect();
+     string sql = $"INSERT INTO Result (CompetitionId, DogId, Points) VALUES(@CompetitionId, @DogId, @Points)";
+    var parameters = new { result.CompetitionId, result.DogId, result.Points};
+    connection.Execute(sql, parameters);
+  }
+
  // visa highscore för alla tillställningar någonsin
 }

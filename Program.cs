@@ -9,9 +9,13 @@ internal class Program
         Menu<string> menu = new();
         Menu<Competition> competitionsMenu = new();
         Menu<Dog> dogsMenu = new();
-        var ui = new UserInterface(db, competitionsMenu, menu, dogsMenu);
+        Menu<Breed> BreedsMenu = new();
+        var ui = new UserInterface(db, competitionsMenu, menu, dogsMenu, BreedsMenu);
 
         ui.Welcome();
-
+        
     }
+
+    
+  
 }
