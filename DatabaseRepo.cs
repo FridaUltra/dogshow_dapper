@@ -156,5 +156,15 @@ public class DatabaseRepo
     connection.Execute(sql, parameters);
   }
 
- // visa highscore för alla tillställningar någonsin
+  public void AddCompetition(Competition competition)
+  {
+    using IDbConnection connection = Connect();
+    string query = $"INSERT INTO Competition (Name, Location, DateOfCompetition ) VALUES(@Name, @Location, @DateOfCompetition) " +
+    "SELECT CAST(SCOPE_IDENTITY() AS INT)";
+    var parameters = new { competition.Name, competition.Location, competition.DateOfCompetition};
+    // connection.Execute(query, parameters);
+    int newId = connection.QuerySingle<int>(query, parameters);
+    competition.Id = newId;
+  }
+
 }
