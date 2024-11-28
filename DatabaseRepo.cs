@@ -156,6 +156,14 @@ public class DatabaseRepo
     connection.Execute(sql, parameters);
   }
 
+    public void AddResult(int competitionId, int dogId, int points)
+  {
+    using IDbConnection connection = Connect();
+     string sql = $"INSERT INTO Result (CompetitionId, DogId, Points) VALUES(@CompetitionId, @DogId, @Points)";
+    var parameters = new { CompetitionId = competitionId, DogId = dogId, Points = points };
+    connection.Execute(sql, parameters);
+  }
+
   public void AddCompetition(Competition competition)
   {
     using IDbConnection connection = Connect();
@@ -166,5 +174,29 @@ public class DatabaseRepo
     int newId = connection.QuerySingle<int>(query, parameters);
     competition.Id = newId;
   }
+  
+  public List<Result> GetAllResultsByCompetitionId(int id)
+  {
+    using IDbConnection connection = Connect();
+    string query = "SELECT * FROM Result WHERE CompetitionId = @Id";
+
+    var resultList = connection.Query<Result>(query, new {Id = id}).AsList();
+    return resultList;
+  }
+
+  public Breed GetBreedById(int id)
+  {
+    using IDbConnection connection = Connect();
+    string query = "SELECT * FROM Breed WHERE Id = @Id";
+    return connection.QueryFirst<Breed>(query, new {Id = id});
+  }
+
+  public Owner GetOwnerById(int id)
+  {
+    using IDbConnection connection = Connect();
+    string query = "SELECT * FROM Owner WHERE Id = @Id";
+    return connection.QueryFirst<Owner>(query, new {Id = id});
+  }
+  
 
 }
