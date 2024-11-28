@@ -8,9 +8,33 @@ public class Ui(DatabaseRepo db)
 
   public void Run()
   {
-    int variabel = StartMenu();
-    Console.Write($"menuval {variabel} valdes");
-    Console.ReadKey();
+    bool isRunning = true;
+    while (isRunning)
+    {
+      Console.Clear();
+      switch (StartMenu())
+      {
+        case 1: 
+        {
+          Console.WriteLine("Resultat");
+          Console.ReadKey();
+          break;
+        }
+        case 2: 
+        {
+          Console.WriteLine("Bedömning");
+          Console.ReadKey();
+          break;
+        }
+        case 3: 
+        {
+          Console.WriteLine("Avsluta");
+          Console.ReadKey();
+          isRunning = false;
+          break;
+        }
+      }
+    }
 
   }
 
