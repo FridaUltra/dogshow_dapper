@@ -67,4 +67,101 @@ public class Ui(DatabaseRepo db)
     }
     
   }
+
+  private int ResultMenu()
+  {
+    while (true)
+    {
+      Console.Clear();
+      Console.WriteLine("ResultatMeny \n");
+      Console.WriteLine($"[1] Resultatlista för en tävling");
+      Console.WriteLine($"[2] ResultatLista för alla tävling");
+      Console.WriteLine($"[3] Genomsnittsbetyg för en hund");
+      Console.WriteLine($"[4] Återgå till huvudmenyn");
+
+      if(int.TryParse(Console.ReadLine(), out int choice ))
+      {
+        if(choice == 1 || choice == 2 || choice == 3 || choice == 4 ) return choice;
+        else
+        {
+          Console.WriteLine("Försök igen, välj 1, 2, 3 eller 4");
+          Thread.Sleep(1500);
+        }
+      }
+      else
+      {
+        Console.WriteLine("Försök igen, välj 1, 2, 3 eller 4");
+        Thread.Sleep(1500);
+      }
+      
+    }
+    
+  }
+
+  private void ShowResult()
+  {
+    while (true)
+    {
+      int menyChoice = ResultMenu();
+
+      if(menyChoice == 1) // resultatlista för en tävling
+      {
+        var competition = ChooseCompetition();
+        if(competition == null) continue;
+        Console.WriteLine($"\n\n{competition}\n");
+
+        List<HighscoreEntry> highscores = _db.GetHighscoreForCompetition(competition);
+       
+        foreach (var item in highscores)
+        {
+          Console.WriteLine($"{item.Dog},\tPoäng: {item.Points},\tÄgare: {item.Owner},\t Ras: {item.Breed} ");
+        }
+        Console.ReadKey();
+      }
+      else if(menyChoice == 2) // resultatlista för alla tävlingar
+      {
+
+      }
+      else if(menyChoice == 3) // genomsnittsbetyg för en hund
+      {
+
+      }
+      else // Återgå till huvudmenyn
+      {
+        break;
+      }
+    }
+    
+  }
+
+   private Competition ChooseCompetition()
+  { 
+    while (true)
+    {
+      Console.Clear();
+      Console.WriteLine("Meny");
+      Console.WriteLine("[E] Återgå till föregående meny");
+      Console.WriteLine("=================================\n");
+      Console.WriteLine("--> Resultatlista för en tävling <--");
+      Console.Write("Ange id:et på tävlingen: ");
+      if(int.TryParse(Console.ReadLine(), out int id))
+      {
+        var competition = _db.GetCompetitionById(id);
+        if(competition == null)
+        {
+          Console.WriteLine("Det fanns ingen tävling med det id:et. Försök igen");
+          Thread.Sleep(1500);
+          continue;
+        }
+        return competition;    
+      }
+      else
+      {
+        if(Console.ReadLine().ToLower() == "e") return null;
+
+        Console.WriteLine("Endast siffror eller E (exit) tillåtet. Försök igen");
+        Thread.Sleep(1500);
+      }
+    }
+  }
 }
