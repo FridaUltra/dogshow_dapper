@@ -12,57 +12,45 @@ public class Ui(DatabaseRepo db)
     while (isRunning)
     {
       Console.Clear();
-      switch (StartMenu())
+      Console.WriteLine("StartMeny \n");
+      Console.WriteLine($"[1] ResultatListor");
+      Console.WriteLine($"[2] Bedömning");
+      Console.WriteLine($"[3] Lägga till tävling");
+      Console.WriteLine($"[4] Avsluta");
+
+      string choice = Console.ReadLine();
+      switch (choice)
       {
-        case 1: 
+        case "1": 
         {
           ShowResult();
           break;
         }
-        case 2: 
+        case "2": 
         {
           Console.WriteLine("Bedömning");
           Console.ReadKey();
           break;
         }
-        case 3: 
+         case "3": 
+        {
+          Console.WriteLine("Lägga till tävling");
+          Console.ReadKey();
+          break;
+        }
+        case "4": 
         {
           Console.WriteLine("Avsluta");
           Console.ReadKey();
           isRunning = false;
           break;
         }
+        default: Console.WriteLine("Ogiltigt val. Försök igen");
+        break;
       }
     }
   }
 
-  private int StartMenu()
-  {
-    while (true)
-    {
-      Console.Clear();
-      Console.WriteLine("StartMeny \n");
-      Console.WriteLine($"[1] ResultatListor");
-      Console.WriteLine($"[2] Bedömning");
-      Console.WriteLine($"[3] Avsluta");
-
-      if(int.TryParse(Console.ReadLine(), out int choice ))
-      {
-        if(choice == 1 || choice == 2 || choice == 3 ) return choice;
-        else
-        {
-          Console.WriteLine("Försök igen, välj 1, 2 eller 3");
-          Thread.Sleep(1500);
-          continue;
-        }
-      }
-      else
-      {
-        Console.WriteLine("Försök igen, välj 1, 2 eller 3");
-        Thread.Sleep(1500);
-      } 
-    }
-  }
 
   private int ResultMenu()
   {
