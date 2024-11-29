@@ -23,7 +23,7 @@ public class Ui(DatabaseRepo db)
       {
         case "1": 
         {
-          ShowResult();
+          ResultMenu();
           break;
         }
         case "2": 
@@ -52,9 +52,10 @@ public class Ui(DatabaseRepo db)
   }
 
 
-  private int ResultMenu()
+  private void ResultMenu()
   {
-    while (true)
+    bool exit = false;
+    while (!exit)
     {
       Console.Clear();
       Console.WriteLine("ResultatMeny \n");
@@ -63,54 +64,45 @@ public class Ui(DatabaseRepo db)
       Console.WriteLine($"[3] Genomsnittsbetyg för en hund");
       Console.WriteLine($"[4] Återgå till huvudmenyn");
 
-      if(int.TryParse(Console.ReadLine(), out int choice ))
+      string choice = Console.ReadLine();
+
+      switch (choice)
       {
-        if(choice == 1 || choice == 2 || choice == 3 || choice == 4 ) return choice;
-        else
+        case "1":
+        {
+          var competition = ChooseCompetition();
+          if(competition == null) continue;
+          Console.WriteLine($"\n\n{competition}\n");
+
+          List<HighscoreEntry> highscores = _db.GetHighscoreForCompetition(competition);
+        
+          foreach (var item in highscores)
+          {
+            Console.WriteLine($"{item.Dog},\tPoäng: {item.Points},\tÄgare: {item.Owner},\t Ras: {item.Breed} ");
+          }
+          Console.ReadKey();
+          break;
+        }
+        case "2":
+        {
+          break;
+        }
+        case "3":
+        {
+          DisplayDogAverageScore();
+          break;
+        }
+        case "4":
+        {
+          exit = true;
+          break;
+        }
+        default:
         {
           Console.WriteLine("Försök igen, välj 1, 2, 3 eller 4");
           Thread.Sleep(1500);
-        }
-      }
-      else
-      {
-        Console.WriteLine("Försök igen, välj 1, 2, 3 eller 4");
-        Thread.Sleep(1500);
-      } 
-    }
-  }
-
-  private void ShowResult()
-  {
-    while (true)
-    {
-      int menyChoice = ResultMenu();
-
-      if(menyChoice == 1) // resultatlista för en tävling
-      {
-        var competition = ChooseCompetition();
-        if(competition == null) continue;
-        Console.WriteLine($"\n\n{competition}\n");
-
-        List<HighscoreEntry> highscores = _db.GetHighscoreForCompetition(competition);
-       
-        foreach (var item in highscores)
-        {
-          Console.WriteLine($"{item.Dog},\tPoäng: {item.Points},\tÄgare: {item.Owner},\t Ras: {item.Breed} ");
-        }
-        Console.ReadKey();
-      }
-      else if(menyChoice == 2) // resultatlista för alla tävlingar
-      {
-
-      }
-      else if(menyChoice == 3) // genomsnittsbetyg för en hund
-      {
-        DisplayDogAverageScore();
-      }
-      else // Återgå till huvudmenyn
-      {
-        break;
+          break;
+        } 
       }
     }
   }
