@@ -118,7 +118,7 @@ public class Ui(DatabaseRepo db)
       }
       else if(menyChoice == 3) // genomsnittsbetyg för en hund
       {
-
+        DisplayDogAverageScore();
       }
       else // Återgå till huvudmenyn
       {
@@ -160,7 +160,36 @@ public class Ui(DatabaseRepo db)
     }
   }
 
-        if(Console.ReadLine().ToLower() == "e") return null;
+  public void DisplayDogAverageScore()
+  {
+    while (true)
+    {
+      Console.Clear();
+      Console.WriteLine("Meny");
+      Console.WriteLine("[E] Återgå till föregående meny");
+      Console.WriteLine("=================================\n");
+      Console.WriteLine("Genomsnittsbetyg för en hund \n");
+      Console.Write("Ange E eller hundens id: ");
+
+      string choice = Console.ReadLine();
+
+      if(int.TryParse(choice, out int id))
+      {
+        var dog = _db.GetDogById(id);
+        if(dog == null)
+        {
+          Console.WriteLine("Det fanns ingen hund med det id:et. Försök igen");
+          Thread.Sleep(1500);
+          continue;
+        }
+        var averageScore = _db.GetDogAverageScore(dog);
+        Console.WriteLine($"Genomsnittsbetyget för {dog.Name} är {averageScore} poäng");
+        Console.ReadLine();
+        break; 
+      }
+      else
+      {
+        if(choice.ToLower() == "e") break;
 
         Console.WriteLine("Endast siffror eller E (exit) tillåtet. Försök igen");
         Thread.Sleep(1500);
