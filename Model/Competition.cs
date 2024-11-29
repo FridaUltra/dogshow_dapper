@@ -9,6 +9,6 @@ public class Competition
 
   public override string ToString()
   {
-     return $"{Name}";
+     return $"{Name} - {DateOfCompetition.ToShortDateString()}";
   }
 }
