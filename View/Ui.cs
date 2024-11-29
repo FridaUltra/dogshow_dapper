@@ -16,8 +16,7 @@ public class Ui(DatabaseRepo db)
       {
         case 1: 
         {
-          Console.WriteLine("Resultat");
-          Console.ReadKey();
+          ShowResult();
           break;
         }
         case 2: 
@@ -35,7 +34,6 @@ public class Ui(DatabaseRepo db)
         }
       }
     }
-
   }
 
   private int StartMenu()
@@ -43,7 +41,7 @@ public class Ui(DatabaseRepo db)
     while (true)
     {
       Console.Clear();
-      Console.WriteLine("StartMenu \n");
+      Console.WriteLine("StartMeny \n");
       Console.WriteLine($"[1] ResultatListor");
       Console.WriteLine($"[2] Bedömning");
       Console.WriteLine($"[3] Avsluta");
@@ -62,10 +60,8 @@ public class Ui(DatabaseRepo db)
       {
         Console.WriteLine("Försök igen, välj 1, 2 eller 3");
         Thread.Sleep(1500);
-      }
-      
+      } 
     }
-    
   }
 
   private int ResultMenu()
@@ -92,10 +88,8 @@ public class Ui(DatabaseRepo db)
       {
         Console.WriteLine("Försök igen, välj 1, 2, 3 eller 4");
         Thread.Sleep(1500);
-      }
-      
+      } 
     }
-    
   }
 
   private void ShowResult()
@@ -131,10 +125,9 @@ public class Ui(DatabaseRepo db)
         break;
       }
     }
-    
   }
 
-   private Competition ChooseCompetition()
+  private Competition ChooseCompetition()
   { 
     while (true)
     {
@@ -143,8 +136,10 @@ public class Ui(DatabaseRepo db)
       Console.WriteLine("[E] Återgå till föregående meny");
       Console.WriteLine("=================================\n");
       Console.WriteLine("--> Resultatlista för en tävling <--");
-      Console.Write("Ange id:et på tävlingen: ");
-      if(int.TryParse(Console.ReadLine(), out int id))
+      Console.Write("Ange E eller tävlingsid: ");
+
+      string choice = Console.ReadLine();
+      if(int.TryParse(choice, out int id))
       {
         var competition = _db.GetCompetitionById(id);
         if(competition == null)
@@ -157,6 +152,14 @@ public class Ui(DatabaseRepo db)
       }
       else
       {
+        if(choice.ToLower() == "e") return null;
+
+        Console.WriteLine("Endast siffror eller E (exit) tillåtet. Försök igen");
+        Thread.Sleep(1500);
+      }
+    }
+  }
+
         if(Console.ReadLine().ToLower() == "e") return null;
 
         Console.WriteLine("Endast siffror eller E (exit) tillåtet. Försök igen");
@@ -164,4 +167,5 @@ public class Ui(DatabaseRepo db)
       }
     }
   }
+
 }
