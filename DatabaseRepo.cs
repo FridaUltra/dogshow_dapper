@@ -25,10 +25,19 @@ public class DatabaseRepo
   public Dog GetDogById(int id)
   {
     using IDbConnection connection = Connect();
-    string query = "SELECT * FROM Dog WHERE Id = @Id";
-    var parameter = new {Id = id};
+    
+    try
+    {
+      string query = "SELECT * FROM Dog WHERE Id = @Id";
+      var parameter = new {Id = id};
 
-    return connection.QuerySingle<Dog>(query, parameter);
+      return connection.QuerySingle<Dog>(query, parameter);
+    }
+    catch (InvalidOperationException)
+    {
+      return null;
+    }
+
   }
 
   // Highscore for a specific dog
