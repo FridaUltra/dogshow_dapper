@@ -119,7 +119,7 @@ public class Ui(DatabaseRepo db)
       Console.WriteLine("--> Resultatlista för en tävling <--");
       Console.Write("Ange E eller tävlingsid: ");
 
-      string choice = Console.ReadLine();
+      string choice = Utility.ReadString();
       if(int.TryParse(choice, out int id))
       {
         var competition = _db.GetCompetitionById(id);
