@@ -34,7 +34,7 @@ public class Ui(DatabaseRepo db)
         }
          case "3": 
         {
-          Console.WriteLine("Lägga till tävling");
+          AddCompetition();
           Console.ReadKey();
           break;
         }
@@ -60,7 +60,7 @@ public class Ui(DatabaseRepo db)
       Console.Clear();
       Console.WriteLine("ResultatMeny \n");
       Console.WriteLine($"[1] Resultatlista för en tävling");
-      Console.WriteLine($"[2] ResultatLista för alla tävling");
+      Console.WriteLine($"[2] ResultatLista för alla tävlingar");
       Console.WriteLine($"[3] Genomsnittsbetyg för en hund");
       Console.WriteLine($"[4] Återgå till huvudmenyn");
 
@@ -85,6 +85,7 @@ public class Ui(DatabaseRepo db)
         }
         case "2":
         {
+          ShowHighScoreForAllCompetitions();
           break;
         }
         case "3":
@@ -140,6 +141,21 @@ public class Ui(DatabaseRepo db)
     }
   }
 
+  private void ShowHighScoreForAllCompetitions()
+  {
+    var list = _db.GetHighscoreForAllCompetitions();
+    
+    Console.WriteLine($"Resultatlista för alla tävlingar\n");
+    
+
+    foreach (var item in list)
+    {
+      Console.WriteLine($"{item.Dog},\tPoäng: {item.Points},\tÄgare: {item.Owner},\t Ras: {item.Breed} ");
+    }
+    
+    Console.ReadLine();
+  }
+
   public void DisplayDogAverageScore()
   {
     while (true)
@@ -177,4 +193,32 @@ public class Ui(DatabaseRepo db)
     }
   }
 
+  private void AddCompetition()
+  {
+    Console.Clear();
+    Console.WriteLine("-->Lägga till tävling \n");
+
+    Console.Write("Ange tävlingsnamn: ");
+    string name = Utility.ReadString();
+    
+    Console.Write("Ange ort/stad: ");
+    string location = Utility.ReadString();
+
+    Console.Write("Ange tävlingsdatum: ");
+    DateTime dateOfCompetition = Utility.ReadDate();
+
+    Competition competition = new()
+    {
+      Name = name,
+      Location = location,
+      DateOfCompetition = dateOfCompetition
+    };
+
+    _db.AddCompetition(competition);
+    Console.WriteLine($"Id för den nya tävlingen är: {competition.Id}");
+    Console.WriteLine($"Vill du lägga till ytterligare en tävling:");
+    Console.ReadLine();
+  }
+
+  
 }
