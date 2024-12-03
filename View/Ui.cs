@@ -195,7 +195,6 @@ public class Ui(DatabaseRepo db)
 
   private void AddCompetition()
   {
-    //TODO: testa att det nya funktionen att lägga till fungerar
     while (true)
     {
       Console.Clear();
@@ -255,8 +254,13 @@ public class Ui(DatabaseRepo db)
           Thread.Sleep(2000);
           continue;
         }
+        else if(choice > competitionsToday.Count)
+        {
+          Console.WriteLine($"Försök igen. Går inte att ange siffra högre än {competitionsToday.Count} ");
+          Thread.Sleep(2000);
+          continue;
+        }
         int index = choice - 1;
-        //TODO: Lägg till felhantering. Det ska inte gå att välja ett högre tal än listans längd. Leder till ArgumentOutOfRangeException.
         competition = competitionsToday[index];
         break;
       }
