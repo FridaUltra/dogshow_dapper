@@ -1,3 +1,4 @@
+using System.Globalization;
 using Model;
 
 namespace View;
@@ -28,8 +29,7 @@ public class Ui(DatabaseRepo db)
         }
         case "2": 
         {
-          Console.WriteLine("Bedömning");
-          Console.ReadKey();
+          JudgeToday();
           break;
         }
          case "3": 
@@ -195,30 +195,147 @@ public class Ui(DatabaseRepo db)
 
   private void AddCompetition()
   {
-    Console.Clear();
-    Console.WriteLine("-->Lägga till tävling \n");
-
-    Console.Write("Ange tävlingsnamn: ");
-    string name = Utility.ReadString();
-    
-    Console.Write("Ange ort/stad: ");
-    string location = Utility.ReadString();
-
-    Console.Write("Ange tävlingsdatum: ");
-    DateTime dateOfCompetition = Utility.ReadDate();
-
-    Competition competition = new()
+    //TODO: testa att det nya funktionen att lägga till fungerar
+    while (true)
     {
-      Name = name,
-      Location = location,
-      DateOfCompetition = dateOfCompetition
-    };
+      Console.Clear();
+      Console.WriteLine("-->Lägga till tävling \n");
 
-    _db.AddCompetition(competition);
-    Console.WriteLine($"Id för den nya tävlingen är: {competition.Id}");
-    Console.WriteLine($"Vill du lägga till ytterligare en tävling:");
-    Console.ReadLine();
+      Console.Write("Ange tävlingsnamn: ");
+      string name = Utility.ReadString();
+      
+      Console.Write("Ange ort/stad: ");
+      string location = Utility.ReadString();
+
+      Console.Write("Ange tävlingsdatum: ");
+      DateTime dateOfCompetition = Utility.ReadDate();
+
+      Competition competition = new()
+      {
+        Name = name,
+        Location = location,
+        DateOfCompetition = dateOfCompetition
+      };
+
+      _db.AddCompetition(competition);
+      Console.WriteLine($"Id för den nya tävlingen är: {competition.Id}");
+      Console.Write("Vill du lägga till en tävling till (j/n): ");
+      
+      if (Utility.IsAnswerYes()) continue;
+      else break;
+    }
+    
   }
 
+  private void JudgeToday()
+  {
+    // Hämta tävlingar för idag
+    List<Competition> competitions = _db.GetAllCompetitions();
+    List<Competition> competitionsToday = competitions.Where(c => c.DateOfCompetition == DateTime.Now.Date).ToList();
+    Competition competition;
+    
+    int choice;
+    if (competitionsToday.Count != 0)
+    {
+      while (true)
+      {
+        Console.Clear();
+        Console.WriteLine("Dagens tävlingar:\n");
+        for (int i = 0; i < competitionsToday.Count; i++)
+        {
+          Console.WriteLine($"[{i+1}] {competitionsToday[i].Name}");
+        }
+      
+        Console.Write("Välj den tävling du ska bedömma. Ange siffran: ");
+        choice = Utility.ReadInt();
+
+        if (choice == 0)
+        {
+          Console.WriteLine("Försök igen. 0 finns inte i listan ");
+          Thread.Sleep(2000);
+          continue;
+        }
+        int index = choice - 1;
+        //TODO: Lägg till felhantering. Det ska inte gå att välja ett högre tal än listans längd. Leder till ArgumentOutOfRangeException.
+        competition = competitionsToday[index];
+        break;
+      }
+      MakeJudgement(competition);
+
+      List<HighscoreEntry> highscores = _db.GetHighscoreForCompetition(competition);
+      Console.WriteLine($"Alla bedömningar för {competition}\n");
+      foreach (var item in highscores)
+      {
+        Console.WriteLine($"{item.Dog},\tPoäng: {item.Points},\tÄgare: {item.Owner},\t Ras: {item.Breed} ");
+      }
+      Console.ReadLine();
+    }
+    else
+    {
+      Console.Clear();
+      Console.WriteLine("Det finns inga tävlingar idag");
+      Console.WriteLine("Lägg upp dagen tävling - val 3 i huvudmenyn");
+      Console.ReadLine();
+    }
+  }
+
+  private void MakeJudgement(Competition competition)
+  {
+    while (true)
+    {
+      Console.Clear();
+      Console.WriteLine($"Tävling: {competition.Name}, Datum: {competition.DateOfCompetition.ToShortDateString()}\n");
+      Console.Write("Ange id på den hund som ska bedömmas: ");
+      int id = Utility.ReadInt();
+      
+      //Hämta hunden
+      Dog dog = _db.GetDogById(id);
+      if(dog == null)
+      {
+        Console.WriteLine("Det finns ingen hund med det id:t. Försök igen");
+        continue;
+      }
+
+      //Kolla om hunden redan har fått poäng för denna tävlingen
+      var results = _db.GetAllResultsByCompetitionId(competition.Id);
+      bool isDogJudged = results.Any(r => r.DogId == dog.Id);
+      if(!isDogJudged)
+      {
+        SetPoints(dog, competition);
+      }
+      else
+      {
+        Console.WriteLine("Hunden har fått bedömning");
+        var result = results.FirstOrDefault(r => r.DogId == dog.Id);
+        var points = result.Points;
+        Console.WriteLine($"Hund: {dog.Name}, Poäng: {points}");
+        Console.ReadKey();
+        break;
+      }
+      Console.Write("Vill du bedömma en hund till?: (j/n)");
+
+      if(Utility.IsAnswerYes()) continue;
+      else break;
+    }
+    
+  }
+
+  private void SetPoints(Dog dog, Competition competition)
+  {
+    var breed = _db.GetBreedById(dog.BreedId);
+    var owner = _db.GetOwnerById(dog.OwnerId);
+    Console.Clear();
+    Console.WriteLine($"Tävling: {competition}");
+    Console.WriteLine($"Hund: {dog.Name}");
+    Console.WriteLine($"Ras: {breed.Name}");
+    Console.WriteLine($"Ägare: {owner.Name}\n");
+
+    Console.Write("Ange poäng: ");
+    int points = Utility.ReadInt();
+    
+    _db.AddResult(competition.Id, dog.Id, points);
+    Console.WriteLine("Tack för din bedömning");
+    Console.ReadLine();
+  }
   
 }
