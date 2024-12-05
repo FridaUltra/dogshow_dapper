@@ -193,7 +193,7 @@ public class Ui(DatabaseRepo db)
     }
   }
 
-  private void AddCompetition()
+private void AddCompetition()
   {
     while (true)
     {
@@ -287,19 +287,25 @@ public class Ui(DatabaseRepo db)
   {
     while (true)
     {
+      
       Console.Clear();
       Console.WriteLine($"Tävling: {competition.Name}, Datum: {competition.DateOfCompetition.ToShortDateString()}\n");
       Console.Write("Ange id på den hund som ska bedömmas: ");
       int id = Utility.ReadInt();
-      
+      Dog dog;
       //Hämta hunden
-      Dog dog = _db.GetDogById(id);
-      if(dog == null)
+      try
       {
+        dog = _db.GetDogById(id);
+      }
+      catch (System.InvalidOperationException)
+      {
+        
         Console.WriteLine("Det finns ingen hund med det id:t. Försök igen");
+        Console.ReadLine();
         continue;
       }
-
+      
       //Kolla om hunden redan har fått poäng för denna tävlingen
       var results = _db.GetAllResultsByCompetitionId(competition.Id);
       bool isDogJudged = results.Any(r => r.DogId == dog.Id);
